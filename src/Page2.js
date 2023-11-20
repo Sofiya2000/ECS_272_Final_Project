@@ -1,7 +1,10 @@
 import React from 'react';
+import StreamGraph from './StreamGraph';
 
 const Page2 = () => {
-  return <div>This is Page 2</div>;
+  return <div>
+    <StreamGraph />
+  </div>;
 };
 
 export default Page2;

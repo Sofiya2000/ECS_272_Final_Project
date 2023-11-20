@@ -1,7 +1,10 @@
 import React from 'react';
+import Map from './Map'
 
 const Page3 = () => {
-  return <div>This is Page 2</div>;
+  return <div>
+    <Map />
+  </div>;
 };
 
 export default Page3;

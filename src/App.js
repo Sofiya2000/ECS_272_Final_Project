@@ -4,7 +4,7 @@ import Page2 from './Page2';
 import Page3 from './Page3';
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(3);
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
