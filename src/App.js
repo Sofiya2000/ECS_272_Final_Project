@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Page1 from './Page1';
+import WebGLMap from './WebGLMap'; 
 import Page2 from './Page2';
 import Page3 from './Page3';
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -18,7 +19,7 @@ const App = () => {
     <div>
       {currentPage === 1 && <Page1 />}
       {currentPage === 2 && <Page2 />}
-      {currentPage === 3 && <Page3 />}
+      {currentPage === 3 && <WebGLMap />}
 
       <button onClick={prevPage} disabled={currentPage === 1}>
         Previous

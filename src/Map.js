@@ -6,7 +6,7 @@ import * as topojson from 'topojson';
 const data = require('./Data/data.json');
 const world = require('./Data/countries-50m.json')
 const colorValues = require('./Data/color.json')
-const margin = { top: 30, right: 30, bottom: 30, left: 30 };
+// const margin = { top: 30, right: 30, bottom: 30, left: 30 };
 const width = 1500;
 const height = 800;
 
@@ -25,7 +25,8 @@ function initChart() {
     projection.fitSize([width, height], land)
     svg.attr("viewBox", `0 0 ${width} ${height}`);
 
-    const g = svg.append('g');
+    const g = svg.append('g')
+        .style("will-change", "transform");
 
     g.append("path")
         .attr("d", path(outline))
@@ -40,9 +41,10 @@ function initChart() {
         .attr("d", path(land))
         .attr("fill", "#999c");
 
-    g.append("path")
+    const borderLines = g.append("path")
         .attr("d", path(borders))
         .attr("fill", "none")
+        .attr("stroke-width", 1)
         .attr("stroke", "#fff");
 
     g.append("path")
@@ -51,9 +53,16 @@ function initChart() {
         .attr("stroke", "#000");
     
     const tempData = data.filter(d => d.Year === 2001);
+    console.log(tempData)
 
-    const regions = [... new Set(tempData.map(d => d.Region))];
+    const regions = [...new Set(tempData.map(d => d.Region))];
     const color = d3.scaleOrdinal(regions, colorValues['colors']);
+
+    const radiusScale = d3.scaleSqrt()
+        .domain([0, d3.max(tempData, d => d.Casualties)])
+        .range([10, 200]); // Adjust the range as needed
+
+    const tooltip = d3.select('#tooltip');
 
     g.selectAll("points")
         .data(tempData)
@@ -61,10 +70,42 @@ function initChart() {
         .append("circle")
         .attr("cx", (d) => { return projection([+d.longitude, +d.latitude])[0] })
         .attr("cy", (d) => { return projection([+d.longitude, +d.latitude])[1] })
-        .attr("r", (d) => Math.sqrt(d.Casualties))
+        .attr("r", (d) => radiusScale(d.Casualties))
         .style("fill", (d) => color(d.Region))
         .attr("stroke-width", 1)
-        .attr("fill-opacity", 0.6);
+        .attr("fill-opacity", 0.6)
+        .on("mouseover", (event, d) => {
+            tooltip.style("display", "block")
+                .html(`${(d.Attack_Type) ? d.Attack_Type : ""}<br>City: ${d.city}<br>Casualties: ${d.Casualties}<br>${d.summary}`);
+        })
+        .on("mousemove", (event) => {
+            tooltip.style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 10 + "px");
+        })
+        .on("mouseout", () => {
+            tooltip.style("display", "none");
+        });
+    
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 100]) // Set the scale extent for zooming (min, max)
+        .on('zoom', handleZoom); // Attach the zoom event handler
+  
+    svg.call(zoom);
+
+    function handleZoom(event) {
+        const { transform } = event;
+        // Apply the zoom transform to the map features
+        g.transition()
+            .attr('transform', transform);
+            const zoomLevel = transform.k;
+            const adjustedRadius = (d) => radiusScale(d.Casualties) / zoomLevel;
+    
+            g.selectAll("circle")
+                .attr("r", (d) => adjustedRadius(d));
+
+            borderLines.attr("stroke-width", 1 / zoomLevel);
+    }
 
     return svg.node();
 }
@@ -78,6 +119,7 @@ const Map = () => {
     return (
         <div style={{ textAlign: 'center' }}>
             <svg id="map-svg"></svg>
+            <div id="tooltip" style={{ position: 'absolute', padding: '10px', background: 'white', border: '1px solid #ccc', display: 'none' }}></div>
         </div>
     );
   };
