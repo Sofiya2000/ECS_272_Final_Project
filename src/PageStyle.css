@@ -1,0 +1,37 @@
+/* Container styling */
+.container {
+  display: flex;
+}
+
+/* Left and right side styling */
+.left-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.ByYear {
+  flex: 1;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Map and year controls styling */
+#map {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+#year-controls {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+
+
+  

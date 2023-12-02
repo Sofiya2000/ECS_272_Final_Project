@@ -1,0 +1,50 @@
+/* Page1.css */
+
+/* Container for the entire page */
+.page-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  
+  #bar-svg {
+    flex: 1; 
+    max-width: 50%; 
+  }
+  
+  .group-data-container {
+    flex: 0.5; 
+    padding: 10px;
+    box-sizing: border-box;
+    max-width: 50%; 
+    background-color: rgb(253, 237, 201); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    border-radius: 10px; 
+    margin: 20px; 
+    margin-right: 20px; 
+    margin-bottom: 40px; 
+  }
+  
+  .group-data {
+    font-family: Arial, sans-serif;
+  }
+  
+  .group-data li {
+    list-style-type: none;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media only screen and (max-width: 768px) {
+    .page-container {
+      flex-direction: column; /* Stack containers on top of each other for smaller screens */
+      max-width: 100%;
+    }
+  
+    #bar-svg,
+    .group-data-container {
+      max-width: 100%; /* Allow elements to take full width on smaller screens */
+    }
+  }
+  
+  
+  
