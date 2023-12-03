@@ -175,7 +175,7 @@ const ByYear = () => {
       const margin = { top: 10, right: 10, bottom: 60, left: 10 };
       const width = totalWidth - margin.left - margin.right;
       const height = totalHeight - margin.top - margin.bottom;
-      const radius = Math.min(width, height) / 2;
+      const radius = Math.min(width, height) /2 + 20;
   
       // Extract groups and lengths for the selected year
       const pieData = Object.entries(dataForYear).map(([group, items]) => ({
@@ -208,8 +208,33 @@ const ByYear = () => {
         .data(pie(pieData))
         .enter()
         .append("g")
-        .attr("class", "arc");
-  
+        .attr("class", "arc")
+        .style('cursor', 'pointer')
+    .on('mouseover', function (event, d) {
+      d3.select(this)
+        .transition()
+        .duration(250)
+        .attr('transform', `translate(${arc.centroid(d)}) scale(1.1)`)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 0.5);
+
+        d3.select(this).select('text')
+        .text(`${d.data.group}: ${d.data.length}`)
+        .attr('dy', '0.5em');
+      
+    })
+    .on('mouseout', function () {
+      d3.select(this)
+        .transition()
+        .duration(250)
+        .attr('transform', 'translate(0,0)')
+        .attr('stroke', 'none');
+
+        d3.select(this).select('text')
+        .text(d => ``)
+        .attr('dy', '0.35em');
+    });
+
       // Draw each slice
       arcs.append("path")
         .attr("fill", (d, i) => color(i))
@@ -219,7 +244,7 @@ const ByYear = () => {
       arcs.append("text")
         .attr("transform", (d) => `translate(${arc.centroid(d)})`)
         .attr("text-anchor", "middle")
-        .text((d) => `${d.data.length}`);
+        .text((d) => ``);
   
       // Legend creation
       const legend = svg.selectAll(".legend")
