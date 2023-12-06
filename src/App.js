@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useTransition, useSpring, animated } from 'react-spring';
 import { styled, createGlobalStyle } from 'styled-components';
 import Page1 from './Page1';
-import WebGLMap from './WebGLMap'; 
 import Page2 from './Page2';
 import Page3 from './Page3';
 import Page4 from './Page4';
